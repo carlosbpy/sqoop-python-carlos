@@ -1,0 +1,1 @@
+PYTHONSTARTUP=/opt/ingestao/automatizador/projetos/$projeto/malha/cria_tabela.py pyspark

@@ -1,0 +1,18 @@
+Parametro;Valor;Descricao;Observacoes;Volatil
+FONTE;SIEBEL15_CARLOS;Nome da fonte;;*
+DIR_CONTROLES;/opt/ingestao/controles/SIEBEL15_CARLOS;Diretorio de arquivos de controles do projeto (fonte);;
+DIR_LOG_EXEC;/var/log/ingestao;Diretorio de arquivos de logs do projeto (fonte);;
+SERVIDOR_HIVE_CONN;brtlvlts0263co.bigdata.redecorp.br:2181,brtlvlts0261co.bigdata.redecorp.br:2181,brtlvlts0262co.bigdata.redecorp.br:2181/\;serviceDiscoveryMode=zooKeeper\;zooKeeperNamespace=hiveserver2;;;
+oKeeperNamespace=hiveserver2;;;;
+TIPO_PROJETO;0; 0: Projeto Novos, 1: Projeto Legado; e.g.: 0 para VIVONET, 1 para PGW;
+FILA_TEZ;Desenvolvimento;Nome da fila do TEZ;;*
+BANCO_HIVE_STAGE;p_bigd_lza_db;;;
+BANCO_HIVE_FATO;p_bigd_lza_db;;;
+TABELA_RELATORIO;relatorio_processamento; Nome da tabela de Relatorio de Processamento;;
+FONTE_1;Flatfile;Fonte projeto SIEBEL15_CARLOS;;
+FONTE_2;Sqoop;Dados extraidos a partir do Sqoop;opcoes: Sqoop, OGG ou Flatfile;
+DRIVER_SQOOP_2;Teradata;Nome da Tecnologia do banco de dados de origem;opcoes: MySQL, Oracle, Teradata ou PostgreSQL;
+DRIVER_DESTINO_SQOOP_2;Flatfile;Formato do arquivo de saida do Sqoop;Sqoop extraindo para flatfile;
+FILA_SQOOP_2;Desenvolvimento;Nome da fila do sqoop que executara o job;;
+CONEXAO_SQOOP_2;10.41.4.251;String de conexao utilizada pelo Sqoop;;
+ACESSO_SQOOP_2;~/.automatizador/vivoplaysqp;Usuario e Senha de conexao do Sqoop;;
