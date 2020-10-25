@@ -79,7 +79,7 @@ def drop_table(objeto):
     '''
     This Function that Drop Temporary Table
     '''
-    spark.sql('drop table {}'.format(objeto))
+    spark.sql('drop table {}'.format(objeto_tmp))
 
 drop_table(objeto_tmp)
  
