@@ -15,51 +15,85 @@ import pyspark
 from pyspark.sql.functions import lit
 
 # Target Database name && Name Project && Name Object 
+
 projeto= os.environ.get('projeto')
 objeto= os.environ.get('objeto')
-database= os.environ.get('database')
 objeto_tmp= os.environ.get('objeto_tmp')
 dt_foto= os.environ.get('dt_today')
 
-# Using Database
-spark.sql('use {}'.format(database))
 
-print('================================ EXECUTING 1/5 ================================')
+database_name= os.environ.get('database_name')
 
-# Query that creates the target table
-sql_create= os.environ.get('query_create_fato')
-print(sql_create)
-spark.sql(sql_create)
-print('================================ CREATE TABLE {0} 2/5 ================================'.format(objeto))
-print(sql_create)
+def use_database(database_name):
+    '''
+    This Function that uses the informed Database
+    '''
+    spark.sql('use {}'.format(database_name))
+    tables_df = spark.sql('show tables')
+    tables_df.show(truncate=False, n=10)
 
-# Query that creates the temporary table
-sql_create_tmp= os.environ.get('query_create_stage')
+use_database(database)
 
-spark.sql(sql_create_tmp)
-print('================================ CREATE TEMPORARY TABLE {0} 3/5 ================================'.format(objeto_tmp))
-print(sql_create_tmp)
+print('================================ CREATE TABLE {0} 1/4 ================================'.format(objeto))
 
-# Inserting data from the HDFS directory
-insert_data_tmp="""load data inpath '/pre_archive/{0}/{1}' into table {2}""".format(projeto,objeto,objeto_tmp)
-spark.sql(insert_data_tmp)
-print('================================ INSERTING  DATA IN TEMPORARY TABLE {0} WITH DT_FOTO {1} 4/5 ================================'.format(objeto_tmp,dt_foto))
-print(insert_data_tmp)
+def show_schema(objeto):
+    '''
+    This Function that displays the schema of the informed table
+    '''
+    df = spark.sql('select * from {} limit 1'.format(objeto))
+    df.printSchema()
 
-# Insert data into the final destination table
-insert_data_table = os.environ.get('insert_data_table')
-spark.sql(insert_data_table)
-print(insert_data_table)
+query_fact= os.environ.get('query_create_fact')
 
-# Drop Temporary Table
-spark.sql('drop table {}'.format(objeto_tmp))
+def create_table(query, objeto):
+    '''
+    This Function that creates fact in the target table
+    '''
+    spark.sql(query)
+    show_schema(objeto)
 
-# ================== Shows Number of Records ==================#
-df = spark.sql('select count(*) as QUANTITY_RECORDS from {}'.format(objeto))
-print('================================ QUANTITY OF RECORDS IN THE TABLE {} 5/5 ================================'.format(objeto))
+create_table(query, objeto)
+
+print('================================ CREATE TEMPORARY TABLE {0} 2/4 ================================'.format(objeto_tmp))
+
+query_stage= os.environ.get('query_create_stage')
+create_table(query_stage, objeto)
+
+def insert_data_in_object_tmp(projeto, objeto, objeto_tmp):
+    '''
+    This Function Inserting data from The Hdfs Directory
+    '''
+    insert_data_tmp="""load data inpath '/pre_archive/{0}/{1}' into table {2}""".format(projeto,objeto,objeto_tmp)
+    spark.sql(insert_data_tmp)
+print('================================ INSERTING  DATA IN TEMPORARY TABLE {0} WITH DT_FOTO {1} 3/4 ================================'.format(objeto_tmp,dt_foto))
+
+query_insert = os.environ.get('insert_data_table')
+def insert_data_object(query_insert):
+    '''
+    This Function Insert data into the final destination table
+    '''
+    spark.sql(insert_data_table)
+    print(insert_data_table)
+
+def drop_table(objeto):
+    '''
+    This Function that Drop Temporary Table
+    '''
+    spark.sql('drop table {}'.format(objeto))
+
+drop_table(objeto_tmp)
+ 
+def count_records_table(objeto):
+    '''
+    This Function that shows the number of records in the object
+    '''
+    df = spark.sql('select count(*) as QUANTITY_RECORDS from {}'.format(objeto))
+    df.show()
+
+
+print('================================ QUANTITY OF RECORDS IN THE TABLE {} 4/4 ================================'.format(objeto))
 print('*********************************************************************************************************')
-df.show()
-print('=========================================================================================================')
+count_records_table(objeto)
 print('*********************************************************************************************************')
-print('================================ FINISHED PROCESS  ======================================================')
+print('================================ FINISHED PROCESS  ================================')
 sys.exit()
