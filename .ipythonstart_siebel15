@@ -1,1 +1,1 @@
-PYTHONSTARTUP=/opt/ingestao/automatizador/projetos/$projeto/malha/cria_tabela.py pyspark
+PYTHONSTARTUP=/opt/ingestao/automatizador/projetos/$projeto/malha/create_table_and_insert.py pyspark
