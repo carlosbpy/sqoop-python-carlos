@@ -26,7 +26,7 @@ export fila='Desenvolvimento'
 #========================== DESTINO ==========================#
 # Name Object
 export objeto='tbgd_tlza_vnda_sb15_carlos'
-export database='p_bigd_lza_db'
+export database_name='p_bigd_lza_db'
 export objeto_tmp='tbgd_tlza_vnda_sb15_carlos_tmp'
 
 # Data Foto
