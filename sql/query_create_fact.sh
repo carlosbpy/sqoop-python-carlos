@@ -9,7 +9,7 @@
 
 
 # Query that creates the target table
-export query_create_fato='''
+export query_create_fact='''
              create table if not exists '$objeto'(
               cd_prdt_lgdo              varchar(30),      
               cd_prdt_lgdo_linh         varchar(30),      

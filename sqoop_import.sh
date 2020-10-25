@@ -75,14 +75,14 @@ sqoop import -D mapreduce.job.name="$sqoop_reduce" -D mapreduce.job.queuename=$f
 --query "$sql" --split-by 1 \
 --target-dir $caminho_hdfs_pre_archive
 
-hdfs dfs -rm -r $caminho_hdfs_main_stage
-hdfs dfs -rm -r $caminho_hdfs_archive
+# hdfs dfs -rm -r $caminho_hdfs_main_stage
+# hdfs dfs -rm -r $caminho_hdfs_archive
 
-hdfs dfs -mkdir  $caminho_hdfs_main_stage
-hdfs dfs -mkdir  $caminho_hdfs_archive
+# hdfs dfs -mkdir  $caminho_hdfs_main_stage
+# hdfs dfs -mkdir  $caminho_hdfs_archive
 
-hdfs dfs -copyFromLocal $caminho_hdfs_pre_archive $caminho_hdfs_main_stage
-hdfs dfs -copyFromLocal $caminho_hdfs_pre_archive $caminho_hdfs_archive
+# hdfs dfs -copyFromLocal $caminho_hdfs_pre_archive $caminho_hdfs_main_stage
+# hdfs dfs -copyFromLocal $caminho_hdfs_pre_archive $caminho_hdfs_archive
 
 source /opt/ingestao/automatizador/projetos/$projeto/.ipythonstart_siebel15
 
