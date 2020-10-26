@@ -10,7 +10,7 @@
 # Insert data into the final destination table
 
 export insert_data_table='''
-                    insert overwrite table '$database'.'$objeto' partition (dt_foto = '$dt_today')
+                    insert overwrite table '$database_name'.'$objeto' partition (dt_foto = '$dt_today')
                     select cd_prdt_lgdo,
                     cd_prdt_lgdo_linh,
                     ds_prdt,
@@ -40,5 +40,5 @@ export insert_data_table='''
                     dt_ultm_atlz_pddo,       
                     re_usro_altr_pddo,
                     in_stts_optn 
-                    from '$database'.'$objeto_tmp'
+                    from '$database_name'.'$objeto_tmp'
                   '''
