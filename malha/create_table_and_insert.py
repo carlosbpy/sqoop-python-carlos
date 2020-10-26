@@ -3,9 +3,7 @@
 
 #======================================#
 #Author: Jose Carlos da Cruz Barbosa
-#Email: jccruz@indracompany.com
-#Company: Indra Company
-#Number: (83)98650-8210
+#Linkedin: https://www.linkedin.com/in/carlos-barbosa-046a9716b/
 #======================================#
 
 
