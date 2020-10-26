@@ -32,7 +32,7 @@ def use_database(database_name):
     tables_df = spark.sql('show tables')
     tables_df.show(truncate=False, n=10)
 
-use_database(database)
+use_database(database_name)
 
 print('================================ CREATE TABLE {0} 1/4 ================================'.format(objeto))
 
