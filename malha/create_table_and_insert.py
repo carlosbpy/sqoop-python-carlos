@@ -67,6 +67,8 @@ def insert_data_in_object_tmp(projeto, objeto, objeto_tmp):
     spark.sql(insert_data_tmp)
 print('================================ INSERTING  DATA IN TEMPORARY TABLE {0} WITH DT_FOTO {1} 3/4 ================================'.format(objeto_tmp,dt_foto))
 
+insert_data_in_object_tmp(projeto, objeto, objeto_tmp)
+
 query_insert = os.environ.get('insert_data_table')
 def insert_data_object(query_insert):
     '''
@@ -74,6 +76,8 @@ def insert_data_object(query_insert):
     '''
     spark.sql(insert_data_table)
     print(insert_data_table)
+
+insert_data_object(query_insert)
 
 def drop_table(objeto):
     '''
