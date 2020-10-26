@@ -13,6 +13,7 @@
 import os, sys
 import pyspark
 import pandas as pd
+from datetime import datetime
 from pyspark.sql.functions import lit
 
 # Declare Variables essentials for the Project
@@ -20,6 +21,7 @@ projeto= os.environ.get('projeto')
 objeto= os.environ.get('objeto')
 objeto_tmp= os.environ.get('objeto_tmp')
 database_name= os.environ.get('database_name')
+dt_foto= os.environ.get('dt_foto')
 
 def time_start_execution():
         '''
@@ -37,9 +39,9 @@ def time_end_execution():
         time_end_execution.end= datetime.now().strftime("%d/%m/%Y %H:%M:%S")
         time_end_execution.t2= datetime.now().strftime("%H:%M:%S")
         time_duration = datetime.strptime(time_end_execution.t2, time_start_execution.time_format) - datetime.strptime(time_start_execution.t1, time_start_execution.time_format)
-        print('========== TIME EXECUTION {} =========='.format(time_duration))
+        print('========== EXECUTION TIME {} =========='.format(time_duration))
         
-
+time_start_execution()
 def use_database(database_name, objeto, projeto):
     '''
     This Function that uses the informed Database
@@ -49,18 +51,15 @@ def use_database(database_name, objeto, projeto):
             print('the global DATABASE_NAME environment variable has not been defined or the variable DATABASE_NAME has not been correctly informed.')
         else:
             print('========== Database Found Sucessful {} =========='.format(database_name))
-            time_start_execution()
             spark.sql('use {}'.format(database_name))
             if objeto is None:
                 print('the global OBJETO environment variable has not been defined or the variable OBJETO has not been correctly informed.')
             else:
                 tables_df = spark.sql('select * from {} limit 1'.format(objeto))
                 print('========== Table Found Sucessful {} =========='.format(objeto))
-                time_start_execution()
                 print('========== First Line of The Table {} ========== '.format(objeto))
                 tables_df_vertical = tables_df.toPandas()
                 print(tables_df_vertical.transpose())
-                time_end_execution()                
     except (Exception) as e:
         print('The .environment file was not loaded, try the command ==> source .environment')
         return False
@@ -93,10 +92,8 @@ def create_table(query, objeto):
         if query is None:
             print('the global QUERY_CREATE_FACT or QUERY_CREATE_STAGE environment variable has not been defined or the variable QUERY_CREATE_FACT or QUERY_CREATE_STAGE has not been correctly informed.')
         else:
-            time_start_execution()
             spark.sql(query)
             show_schema(objeto)
-            time_end_execution()
     except (Exception) as e:
         print('The .environment file was not loaded, try the command ==> source .environment')
         return False
@@ -116,10 +113,8 @@ def insert_data_in_object_tmp(projeto, objeto, objeto_tmp):
         if projeto or objeto or objeto_tmp is None:
             print('the global PROJETO, OBJETO and OBJETO_TMP environment variable has not been defined or the variable PROJETO, OBJETO and OBJETO_TMP has not been correctly informed.')
         else:
-            time_start_execution()
             insert_data_tmp="""load data inpath '/pre_archive/{0}/{1}' into table {2}""".format(projeto,objeto,objeto_tmp)
             spark.sql(insert_data_tmp)
-            time_end_execution()
     except (Exception) as e:
         print('The .environment file was not loaded, try the command ==> source .environment')
         return False
@@ -137,9 +132,7 @@ def insert_data_object(query_insert, projeto):
         if query_insert is None:
             print('the global INSERT_DATA_TABLE environment variable has not been defined or the variable INSERT_DATA_TABLE has not been correctly informed.')
         else:
-            time_start_execution()
             spark.sql(query_insert)
-            time_end_execution()
     except (Exception) as e:
         print('The .environment file was not loaded, try the command ==> source .environment')
         return False
@@ -154,9 +147,7 @@ def drop_table(objeto, projeto):
         if objeto is None:
             print('the global OBJETO environment variable has not been defined or the variable OBJETO has not been correctly informed.')
         else:
-            time_start_execution()
             spark.sql('drop table {}'.format(objeto))
-            time_end_execution()
     except (Exception) as e:
         print('The .environment file was not loaded, try the command ==> source .environment')
         return False
@@ -171,10 +162,8 @@ def count_records_table_per_partition(objeto, projeto):
         if objeto is None:
             print('the global OBJETO environment variable has not been defined or the variable OBJETO has not been correctly informed.')
         else:
-            time_start_execution()
             df = spark.sql('select count(*) as QUANTITY_RECORDS_PER_PARTITION, dt_foto from {} group by dt_foto order by dt_foto desc'.format(objeto))
             df.show()
-            time_end_execution()
     except (Exception) as e:
         print('The .environment file was not loaded, try the command ==> source .environment')
         return False
@@ -184,5 +173,6 @@ print('================================ QUANTITY OF RECORDS IN THE TABLE PER PAR
 print('*********************************************************************************************************')
 count_records_table_per_partition(objeto, projeto)
 print('*********************************************************************************************************')
+time_end_execution()
 print('================================ FINISHED PROCESS  ================================')
 sys.exit()
