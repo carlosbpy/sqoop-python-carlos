@@ -6,7 +6,7 @@
 #======================================#
 
 
-#========================== ORIGEM ==========================#
+#========================== Source ==========================#
 # Credentials
 export username=''
 export password=''
@@ -21,13 +21,13 @@ export service_name=''
 export sqoop_reduce=''
 export queue=''
 
-#========================== DESTINO ==========================#
+#========================== Destiny ==========================#
 # Name Object
 export objeto=''
 export database_name=''
 export objeto_tmp=''
 
-# Data Foto
+# Date Foto
 export dt_today=$(date +%Y%m%d)
 
 # Hdfs Directory
