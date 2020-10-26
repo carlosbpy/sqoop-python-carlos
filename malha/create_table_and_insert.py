@@ -3,9 +3,6 @@
 
 #======================================#
 #Author: Jose Carlos da Cruz Barbosa
-#Email: jccruz@indracompany.com
-#Company: Indra Company
-#Number: (83)98650-8210
 #======================================#
 
 
@@ -28,9 +25,13 @@ def use_database(database_name):
     '''
     This Function that uses the informed Database
     '''
-    spark.sql('use {}'.format(database_name))
-    tables_df = spark.sql('show tables')
-    tables_df.show(truncate=False, n=10)
+    try:
+        spark.sql('use {}'.format(database_name))
+        tables_df = spark.sql('show tables')
+        tables_df.show(truncate=False, n=10)
+    except (Exception) as e:
+        print('the global DATABASE_NAME environment variable has not been defined')
+        return False
 
 use_database(database_name)
 
@@ -40,8 +41,12 @@ def show_schema(objeto):
     '''
     This Function that displays the schema of the informed table
     '''
-    df = spark.sql('select * from {} limit 1'.format(objeto))
-    df.printSchema()
+    try:
+        df = spark.sql('select * from {} limit 1'.format(objeto))
+        df.printSchema()
+    except (Exception) as e:
+        print('the global OBJETO environment variable has not been defined')
+        return False
 
 query_fact= os.environ.get('query_create_fact')
 
@@ -49,33 +54,45 @@ def create_table(query, objeto):
     '''
     This Function that creates fact in the target table
     '''
-    spark.sql(query)
-    show_schema(objeto)
+    try:
+        spark.sql(query)
+        show_schema(objeto)
+    except (Exception) as e:
+        print('the global QUERY_FACT and OBJETO environment variable has not been defined')
+        return False
 
-create_table(query, objeto)
+create_table(query_fact, objeto)
 
 print('================================ CREATE TEMPORARY TABLE {0} 2/4 ================================'.format(objeto_tmp))
 
 query_stage= os.environ.get('query_create_stage')
 create_table(query_stage, objeto)
 
-def insert_data_in_object_tmp(projeto, objeto, objeto_tmp):
+def insert_data_in_object_tmp():
     '''
     This Function Inserting data from The Hdfs Directory
     '''
-    insert_data_tmp="""load data inpath '/pre_archive/{0}/{1}' into table {2}""".format(projeto,objeto,objeto_tmp)
-    spark.sql(insert_data_tmp)
+    try:
+        insert_data_tmp="""load data inpath '/pre_archive/{0}/{1}' into table {2}""".format(projeto,objeto,objeto_tmp)
+        spark.sql(insert_data_tmp)
+    except (Exception) as e:
+        print('the global PROJETO, OBJETO and OBJETO_TMP environment variable has not been defined')
+        return False
+
 print('================================ INSERTING  DATA IN TEMPORARY TABLE {0} WITH DT_FOTO {1} 3/4 ================================'.format(objeto_tmp,dt_foto))
 
-insert_data_in_object_tmp(projeto, objeto, objeto_tmp)
+insert_data_in_object_tmp()
 
 query_insert = os.environ.get('insert_data_table')
 def insert_data_object(query_insert):
     '''
     This Function Insert data into the final destination table
     '''
-    spark.sql(query_insert)
-    print(query_insert)
+    try:
+        spark.sql(query_insert)
+    except (Exception) as e:
+        print('the global INSERT_DATA_TABLE environment variable has not been defined')
+        return False
 
 insert_data_object(query_insert)
 
@@ -83,21 +100,29 @@ def drop_table(objeto):
     '''
     This Function that Drop Temporary Table
     '''
-    spark.sql('drop table {}'.format(objeto_tmp))
+    try:
+        spark.sql('drop table {}'.format(objeto))
+    except (Exception) as e:
+        print('the global INSERT_DATA_TABLE environment variable has not been defined')
+        return False
 
 drop_table(objeto_tmp)
  
-def count_records_table(objeto):
+def count_records_table_per_partition(objeto):
     '''
     This Function that shows the number of records in the object
     '''
-    df = spark.sql('select count(*) as QUANTITY_RECORDS from {}'.format(objeto))
-    df.show()
+    try:
+        df = spark.sql('select count(*) as QUANTITY_RECORDS_PER_PARTITION, dt_foto from {} group by dt_foto order by dt_foto desc'.format(objeto))
+        df.show()
+    except (Exception) as e:
+        print('the global OBJETO environment variable has not been defined')
+        return False
 
 
-print('================================ QUANTITY OF RECORDS IN THE TABLE {} 4/4 ================================'.format(objeto))
+print('================================ QUANTITY OF RECORDS IN THE TABLE PER PARTITION {} 4/4 ================================'.format(objeto))
 print('*********************************************************************************************************')
-count_records_table(objeto)
+count_records_table_per_partition(objeto)
 print('*********************************************************************************************************')
 print('================================ FINISHED PROCESS  ================================')
 sys.exit()
