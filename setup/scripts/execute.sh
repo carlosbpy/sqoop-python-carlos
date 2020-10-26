@@ -41,7 +41,7 @@ export projeto='siebel15_carlos'
 
 source /opt/ingestao/automatizador/projetos/$projeto/.environment_siebel15.sh
 source /opt/ingestao/automatizador/projetos/$projeto/sql/insert_data_table.sh
-source /opt/ingestao/automatizador/projetos/$projeto/sql/query_create_fato.sh
+source /opt/ingestao/automatizador/projetos/$projeto/sql/query_create_fact.sh
 source /opt/ingestao/automatizador/projetos/$projeto/sql/query_create_stage.sh
 
 cd /opt/ingestao/automatizador/projetos/$projeto/ && chmod +x sqoop_import.sh && ./sqoop_import.sh
