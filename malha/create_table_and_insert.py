@@ -74,8 +74,8 @@ def insert_data_object(query_insert):
     '''
     This Function Insert data into the final destination table
     '''
-    spark.sql(insert_data_table)
-    print(insert_data_table)
+    spark.sql(query_insert)
+    print(query_insert)
 
 insert_data_object(query_insert)
 
