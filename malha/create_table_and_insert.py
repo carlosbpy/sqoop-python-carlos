@@ -108,7 +108,7 @@ def insert_data_in_object_tmp(projeto, objeto, objeto_tmp):
     This Function Inserting data from The Hdfs Directory
     '''
     try:
-        if projeto or objeto or objeto_tmp is None:
+        if projeto and objeto and objeto_tmp is None:
             print('the global PROJETO, OBJETO and OBJETO_TMP environment variable has not been defined or the variable PROJETO, OBJETO and OBJETO_TMP has not been correctly informed.')
         else:
             insert_data_tmp="""load data inpath '/pre_archive/{0}/{1}' into table {2}""".format(projeto,objeto,objeto_tmp)
